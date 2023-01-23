@@ -67,9 +67,32 @@ app.post(("/urls/:id/delete"), (req, res) => {
   delete urlDatabase[req.params.id];
   res.redirect("/urls")
 });
+
 app.post(("/login"), (req, res) => {
   res.cookie('name', 'value');
   res.redirect("/urls");
 
  
 });
+
+
+app.get('/login', (req,res) => {
+  res.cookie('key','username');
+  res.redirect('/urls');
+  const templateVars = {
+    username: req.cookies["username"],
+    // ... any other vars
+  };
+  res.render("urls_index", templateVars);
+
+});
+
+
+// app.post(("/login"), (req, res) => {
+//   res.cookie('key', 'username');
+//   res.redirect("/urls"); 
+// });
+
+
+
+
