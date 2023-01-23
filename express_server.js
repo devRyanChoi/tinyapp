@@ -64,4 +64,7 @@ app.post(("/urls/:id/delete"), (req, res) => {
   delete urlDatabase[req.params.id];
   res.redirect("/urls")
 });
-
+app.post(("/login"), (req, res) => {
+  res.cookie('username', { signed: true })
+  res.redirect("/urls");
+});
