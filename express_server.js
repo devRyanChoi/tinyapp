@@ -32,11 +32,16 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  const templateVars = { id: req.params.id, longURL: "http://www.lighthouselabs.ca" };
+  const templateVars = { id: req.params.id, longURL: [req.params.id].longURL };
   res.render("urls_show", templateVars);
 });
 
 app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  res.send(" Success"); // Respond with 'Ok' (we will replace this)
+});
+
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id];
+  res.redirect(longURL);
 });
