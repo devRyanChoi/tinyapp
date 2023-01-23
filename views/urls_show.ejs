@@ -13,6 +13,7 @@
 
   <body>
     <%- include('partials/_header') %>
+    
     <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
@@ -20,6 +21,7 @@
         <p class="card-text">
           Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
         </p>
+<<<<<<< HEAD
       </div>
 
       <div class="card-footer text-muted"></div>
@@ -29,6 +31,26 @@
         <input class="form-control" type="text" name="longURL" placeholder="http://" style="margin: 1em">
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
+=======
+        <div class="card-footer text-muted">
+          <h2>EDIT</h2>
+        <form class="form-inline justify-content-center"  action="/urls/" method=POST>
+          <div class="form-group mb-2">
+            <label for="longURL">New URL:</label>
+            <input
+              class="form-control"
+              type="text"
+              name="longURL"
+              placeholder="http://"
+              style="width: 300px; margin: 1em"
+            />
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form> 
+        </div>
+        </div>        
+      
+>>>>>>> 7472372 (modified)
     </div>
     <!-- Bootstrap JS -->
     <script
