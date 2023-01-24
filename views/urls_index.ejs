@@ -17,7 +17,7 @@
     <title>TinyApp</title>
   </head>
   <body>
-
+ 
     <%- include('partials/_header') %>
     <main style="margin: 1em;">
       <h3>My URLs</h3>
@@ -31,7 +31,7 @@
           </tr>
         </thead>
         <tbody>
-          <% for (let id in urls) { %>
+          <% for (let id in url) { %>
             <tr>
               <td><%= id %></td>
               <td><%= urls[id] %></td>
@@ -43,7 +43,6 @@
               </td>
             </tr>
           <% } %>
-        </tbody>
       </table>
     </main>
     <!-- Bootstrap JS -->

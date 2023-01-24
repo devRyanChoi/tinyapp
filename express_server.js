@@ -41,7 +41,7 @@ app.get("/urls/:id", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
-  res.send(" Success"); // Respond with 'Ok' (we will replace this)
+  res.send(" Request Success"); // Respond with 'Ok' (we will replace this)
 });
 
 app.get("/u/:id", (req, res) => {
@@ -76,23 +76,63 @@ app.post(("/login"), (req, res) => {
 });
 
 
-app.get('/login', (req,res) => {
-  res.cookie('key','username');
-  res.redirect('/urls');
+// login page
+// app.get("/login", (req, res) => {
+//   const templateVars = { url: urlDatabase, user_id: null };
+
+//   res.render("login", templateVars);
+// });
+
+app.get("/login", (req, res) => {
   const templateVars = {
     username: req.cookies["username"],
     // ... any other vars
   };
   res.render("urls_index", templateVars);
-
 });
 
 
-// app.post(("/login"), (req, res) => {
-//   res.cookie('key', 'username');
-//   res.redirect("/urls"); 
-// });
 
+app.post('/login', (req,res) => {
+  const {email, password} = req.body;
+	// const {error, user} = authenticateUser(email, password);
+	if(error) {
+		console.log(req,cookies)
+		return res.redirect("/urls");
+	}
+		res.cookie("username", username )
+		return res.redirect("/urls");
+	//res.render()
+	});
+
+
+
+// app.post("/login", (req, res) => {
+// 	const {email, password} = req.body;
+// 	const {error, user} = authenticateUser(email, password);
+// 	if(error) {
+// 		console.log("error:", error)
+// 		return res.redirect("/");
+// 	}
+// 		res.cookie("email", email )
+// 		return res.redirect("/");
+
+// 	});
+
+
+
+// app.post("/login", (req, res) => {
+// if(!userDatabaseIsh[req.body.email]) {
+// 		console.log("Email doesn't exist");
+// 	return res.redirect("/");
+// 	}
+// //Password doesn't match
+// if (uesrDatabaseIsh[req.body.eamil].password !== req.body.password) {
+// 		console.log("Password bad")
+// 		return res.redirect("/");
+// }
+// 	res.json(userDatabaseIsh[req.body.email]);
+// });
 
 
 

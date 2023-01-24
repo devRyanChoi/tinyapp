@@ -18,18 +18,15 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-      <input 
-      class="form-control"
-      type="text"
-      name="username"
-      placeholder="Username"
-      style="width: 150px; margin: 1em"/>
-    
-    
-      <div class="navbar-nav">
+    <div>
+
+      <form class="navbar-nav" action="/login" method="Post">
+        <input type="username" name="username" placeholder="Username: ">
         <a href="/login" class="nav-item nav-link">Login</a>
         <a href="/register" class="nav-item nav-link" >Register</a>
-       </div>
+       </form>
+       
+       
 
 
   </nav>
