@@ -14,16 +14,11 @@ const urlDatabase = {
 };
 
 
-
-app.get("/urls", (req, res) => {
-  let templateVars = {
-      
-    user: users[req.session.user_id],
-    urls: urlDatabase };
-       
-  console.log(templateVars.user);
-  res.render("urls_index", templateVars);
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
 });
+
+
 
 //generating random string to id
 app.post("/urls", (req, res) => {
@@ -45,16 +40,14 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, username: req.cookies.username };
+  
   res.render("urls_index", templateVars)
 });
 
@@ -63,7 +56,9 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id]};
+  const templateVars = { 
+    id: req.params.id, 
+    longURL: urlDatabase[req.params.id]};
   res.render("urls_show", templateVars);
 });
 
@@ -95,7 +90,7 @@ app.post(("/urls/:id/delete"), (req, res) => {
 
 // LOGIN Page
 app.post(("/login"), (req, res) => {
-  res.cookie('name', 'value');
+  res.cookie('username', req.body.username);
   res.redirect("/urls");
 });
 
@@ -108,21 +103,7 @@ app.get("/login", (req, res) => {
 });
 
 
-
-app.post('/login', (req,res) => {
-
-
-	if(error) {
-		console.log(req,cookies)
-		return res.redirect("/urls");
-	}
-		res.cookie("username", username )
-		return res.redirect("/urls");
-	//res.render()
-	});
-
   app.post("/logout", (req, res) => {
-    
-    req.session.user_id = null;
+    res.clearCookie("username");
     res.redirect("/urls");
   });
