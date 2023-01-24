@@ -15,15 +15,15 @@ const urlDatabase = {
 
 
 
-app.get("/urls", (req, res) => {
-  let templateVars = {
+// app.get("/urls", (req, res) => {
+//   let templateVars = {
       
-    user: users[req.session.user_id],
-    urls: urlDatabase };
+//     user: users[req.session.user_id],
+//     urls: urlDatabase };
        
-  console.log(templateVars.user);
-  res.render("urls_index", templateVars);
-});
+//   console.log(templateVars.user);
+//   res.render("urls_index", templateVars);
+// });
 
 //generating random string to id
 app.post("/urls", (req, res) => {
@@ -54,7 +54,7 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, user : users[req.cookies] };
   res.render("urls_index", templateVars)
 });
 
@@ -126,3 +126,14 @@ app.post('/login', (req,res) => {
     req.session.user_id = null;
     res.redirect("/urls");
   });
+
+  app.get("/register", (req, res) =>{
+    console.log("Get Success");
+    res.render("urls_register");
+  });
+
+  // app.post("/register" , (req, res) => {
+
+  // });
+
+  
