@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "9sm5xK": "http://www.google.com",
 };
 
 app.get("/", (req, res) => {
@@ -68,27 +68,19 @@ app.post(("/urls/:id/delete"), (req, res) => {
   res.redirect("/urls")
 });
 
+
+// LOGIN Page
 app.post(("/login"), (req, res) => {
   res.cookie('name', 'value');
   res.redirect("/urls");
-
- 
 });
-
-
-// login page
-// app.get("/login", (req, res) => {
-//   const templateVars = { url: urlDatabase, user_id: null };
-
-//   res.render("login", templateVars);
-// });
 
 app.get("/login", (req, res) => {
   const templateVars = {
     username: req.cookies["username"],
     // ... any other vars
   };
-  res.render("urls_index", templateVars);
+  res.render("/urls", templateVars);
 });
 
 
@@ -105,34 +97,7 @@ app.post('/login', (req,res) => {
 	//res.render()
 	});
 
-
-
-// app.post("/login", (req, res) => {
-// 	const {email, password} = req.body;
-// 	const {error, user} = authenticateUser(email, password);
-// 	if(error) {
-// 		console.log("error:", error)
-// 		return res.redirect("/");
-// 	}
-// 		res.cookie("email", email )
-// 		return res.redirect("/");
-
-// 	});
-
-
-
-// app.post("/login", (req, res) => {
-// if(!userDatabaseIsh[req.body.email]) {
-// 		console.log("Email doesn't exist");
-// 	return res.redirect("/");
-// 	}
-// //Password doesn't match
-// if (uesrDatabaseIsh[req.body.eamil].password !== req.body.password) {
-// 		console.log("Password bad")
-// 		return res.redirect("/");
-// }
-// 	res.json(userDatabaseIsh[req.body.email]);
-// });
-
-
-
+app.post("/logout", (req, res) => {
+  req.session = null;
+  res.redirect("/login");
+});
