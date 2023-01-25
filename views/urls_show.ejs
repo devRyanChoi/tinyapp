@@ -11,7 +11,7 @@
     <title>URL - TinyApp Example</title>
   </head>
 
-  <body>
+  <<body>
     <%- include('partials/_header') %>
 
     <div class="card text-center">
@@ -19,11 +19,11 @@
       <div class="card-body">
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
         <p class="card-text">
-          Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
+          Short URL ID: <a href="/u/<%= shortURL %>"><%= shortURL %></a>
         </p>
 
         <!-- edit LongURl form-->
-        <form class="form-inline" action="/urls/<%= id %>" method="POST">
+        <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
           <div class="form-group mb-2">
             <label for="longURL">Edit:</label>
             <input
@@ -41,6 +41,11 @@
       </div>
       <div class="card-footer text-muted"></div>
     </div>
+
+      
+
+
+
     <!-- Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
