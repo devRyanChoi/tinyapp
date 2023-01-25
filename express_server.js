@@ -41,6 +41,16 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+
+app.get("/urls", (req, res) => {
+  const templateVars = { 
+    user: req.cookies.user_id,
+    urls: urlDatabase, 
+  };
+  
+  res.render("urls_index", templateVars)
+});
+
 //Creating a new longURL with random ShortURL id route
 app.get("/urls/new", (req, res) => {
   const templateVars = {
@@ -61,14 +71,6 @@ res.redirect("/urls", newURLId);
 
 
 
-app.get("/urls", (req, res) => {
-  const templateVars = { 
-    user: req.cookies.user_id,
-    urls: urlDatabase, 
-  };
-  
-  res.render("urls_index", templateVars)
-});
 
 
 //generating random string to id

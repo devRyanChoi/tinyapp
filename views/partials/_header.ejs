@@ -19,15 +19,17 @@
       </div>
     </div>
     <% if(!user){ %>
-      <form action="/login" method="Post">
-        <input type="username" name="username" placeholder="Username: ">
-        <button type="submit">Login</button>
-       </form>
+      <div class="navbar-nav">
+        <a href="/login" class="nav-item nav-link">Login</a>
+        <a href="/register" class="nav-item nav-link" >Register</a>
     <% } %>
     <% if(user) { %>
-      <form action="/logout" method="Post">
-        <button type="submit">Logout</button>
-       </form>
+      <div class="'navbar-nav">
+        <form method="POST" action="/logout" for="user_id" class="d-flex nav-item" role="search">
+          <span class="nav-link">Welcome, <%= user_email %>!</span>
+          <button class="btn btn-light" type="submit">Logout</button>
+        </form>
+        </div>
     <% } %>
     <div>
 
