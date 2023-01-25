@@ -88,10 +88,10 @@ app.post("/urls", (req, res) => {
 
 // GET - url/new
 app.get("/urls/new", (req, res) => {
-  // if (!req.session.user_id) {
-  //   console.log("you are logged out, please login");
-  //   res.redirect("/login");
-  // }
+  if (!req.session.user_id) {
+    console.log("you are logged out, please login");
+    res.redirect("/login");
+  }
     
   let templateVars = {
     user: req.session.user_id,
@@ -143,17 +143,24 @@ app.get("/login", (req, res) => {
 
 
 
-app.post('/login', (req,res) => {
-
-
-	if(error) {
-		console.log(req,cookies)
-		return res.redirect("/urls");
-	}
-		res.cookie("username", username )
-		return res.redirect("/urls");
-	//res.render()
-	});
+app.post(("/login"), (req, res) => {
+  let userID = userMatching(users, req.body.email);
+  function userMatching(users, email) {
+    for (let u in users) {
+      if (email === users[u].email) {
+        return u;
+      }
+    }
+    return false;
+  }
+  console.log(userID.id);
+  if(!userID) {
+    res.status(403).send("Invalid email")
+  } else {
+    req.session.user_id = userID;
+    res.redirect("/urls");
+  }
+});
 
 // logOut cookie
 app.post("/logout", (req, res) => {
@@ -173,7 +180,7 @@ app.post("/register", (req, res)=>{
   let getEmail = req.body.email;
   let getPassword = req.body.password;
   if (getEmail === '' || getPassword === '') {
-    console.log("error");
+    console.log("registration failed");
     return res.status(400).send("Error");
   }
 
