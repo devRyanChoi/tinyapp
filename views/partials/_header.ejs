@@ -18,19 +18,18 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <% if(!user){ %>
-      <form action="/login" method="Post">
-        <input type="username" name="username" placeholder="Username: ">
-        <button type="submit">Login</button>
-       </form>
-    <% } %>
-    <% if(user) { %>
-      <form action="/logout" method="Post">
-        <button type="submit">Logout</button>
-       </form>
-    <% } %>
-    <div>
-
-
+    <div class="navbar-nav">
+      <%if(!user){%>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+      <%}else{%>
+      
+        <form method="POST" action="/logout" for="user_id" class="d-flex nav-item" role="search">
+          <span class="nav-link">Welcome, <%= user_email %>!</span>
+          <button class="btn btn-light" type="submit">Logout</button>
+        </form>
+        </div>
+        <%}%>
+      </div>
   </nav>
 </header>

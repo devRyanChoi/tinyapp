@@ -76,10 +76,10 @@ app.post("/urls", (req, res) => {
 
 // GET - url/new
 app.get("/urls/new", (req, res) => {
-  if (!req.session.user_id) {
-    console.log("you are logged out, please login");
-    res.redirect("/login");
-  }
+  // if (!req.session.user_id) {
+  //   console.log("you are logged out, please login");
+  //   res.redirect("/login");
+  // }
     
   let templateVars = {
     user: req.session.user_id,
@@ -103,7 +103,7 @@ app.get("/urls/:shortURL", (req, res) => {
 // POST - urls/:shortURL  - Edit the LongURL
 app.post("/urls/:shortURL", (req, res) => {
   const updatedURL = req.params.shortURL;
-  urlDatabase[updatedURL].longURL = req.body.longURL;
+  urlDatabase[updatedURL] = req.body.longURL;
   res.redirect("/urls");
 });
 
@@ -142,10 +142,37 @@ app.post("/logout", (req, res) => {
   });
 
 
-// Register   
+// GET - Register   
 app.get("/register", (req, res)=>{
   console.log("GET");
-  res.render("urls_register", {user: null});
+  res.render("register", {user: null});
+});
+
+// POST - Register   
+app.post("/register", (req, res)=>{
+  let getEmail = req.body.email;
+  let getPassword = req.body.password;
+  if (getEmail === '' || getPassword === '') {
+    console.log("error");
+    return res.status(400).send("Error");
+  }
+
+  for (let keys in users) {
+    if (users[keys].email === getEmail) {
+      return res.status(400).send("email already exitsts");
+    }
+  }
+
+  let userID = generateRandomString();
+   
+  users[rID] = {
+    id: userID, 
+    email: req.body.email, 
+    password: req.body.password,
+  };
+    
+  req.session.user_id = users[userID].id;
+  res.redirect("/urls");
 });
 
 
