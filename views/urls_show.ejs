@@ -18,29 +18,33 @@
       <div class="card-header"></div>
       <div class="card-body">
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
-        <p class="card-text">
-          Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
-        </p>
-
-        <!-- edit LongURl form-->
-        <form class="form-inline" action="/urls/<%= id %>" method="POST">
-          <div class="form-group mb-2">
-            <label for="longURL">Edit:</label>
-            <input
-              class="form-control"
-              type="text"
-              name="longURL"
-              placeholder="http://"
-              style="width: 300px; margin: 1em"
-              value="<%= longURL %>"
-            />
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
-        
+        <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a>
+        </p>   
       </div>
-      <div class="card-footer text-muted"></div>
+     
     </div>
+      <div class="card-footer text-muted">
+                  <!-- edit LongURl form-->
+                  <form class="form-inline justify-content-center"  action="/urls/<%= shortURL %>" method="POST">
+                    <div class="form-group mb-2">
+                      <label for="longURL">Edit:</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="longURL"
+                        placeholder="http://"
+                        style="width: 300px; margin: 1em"
+                        value="<%= longURL %>"
+                      />
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                  </form>
+      </div>
+
+      
+
+
+
     <!-- Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
