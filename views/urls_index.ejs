@@ -17,6 +17,7 @@
     <title>TinyApp</title>
   </head>
   <body>
+    
     <%- include('partials/_header') %>
 
     <main style="margin: 1em;">
@@ -31,20 +32,18 @@
           </tr>
         </thead>
         <tbody>
-          <% for (let url in urls) { %>
+          <% for (let id in urls) { %>
             <tr>
-              <td><%= url %></td>
-              <td><%= urls[url] %></td>
+              <td><%= id %></td>
+              <td><%= urls[id] %></td>
               <td>
-                <form method="GET" action="/urls/<%= url %>">  <button type="submit" class="btn btn-primary">Edit</button>
-                </form>
+                <form method="GET" action="/urls/<%= id %>">  <button type="submit" class="btn btn-primary">Edit</button></form>
               </td>
-                <td><form method="POST" action="/urls/<%= url %>/delete">  <button type="submit" class="btn btn-danger mb-3">Delete</button>
-                </form>
-            </td>
+              <td>
+                <form method="POST" action="/urls/<%= id %>/delete">  <button type="submit" class="btn btn-danger mb-3">Delete</button></form>
+              </td>
             </tr>
           <% } %>
-        </tbody>
       </table>
     </main>
     <!-- Bootstrap JS -->
