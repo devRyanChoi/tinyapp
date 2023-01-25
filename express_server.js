@@ -153,9 +153,12 @@ app.post(("/login"), (req, res) => {
     return false;
   }
   console.log(userID.id);
-  
-  req.session.user_id = userID;
-  res.redirect("/urls");
+  if(!userID) {
+    res.status(403).send("Invalid email")
+  } else {
+    req.session.user_id = userID;
+    res.redirect("/urls");
+  }
 });
 
 // logOut cookie
