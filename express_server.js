@@ -30,14 +30,7 @@ const urlDatabase = {
   //"9sm5xK": "http://www.google.com",
 };
 
-function userMatching(users, email) {
-  for (let u in users) {
-    if (email === users[u].email) {
-      return u;
-    }
-  }
-  return false;
-}
+
 
 const users = {
   userRandomID: {
@@ -151,7 +144,14 @@ app.get("/login", (req, res) => {
 // POST - login cookie
 app.post(("/login"), (req, res) => {
   let userID = userMatching(users, req.body.email);
-
+  function userMatching(users, email) {
+    for (let u in users) {
+      if (email === users[u].email) {
+        return u;
+      }
+    }
+    return false;
+  }
   console.log(userID.id);
   
   req.session.user_id = userID;
