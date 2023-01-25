@@ -15,10 +15,29 @@ app.use(
   })
 ); 
 
+function generateRandomString() {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let newString = '';
+  for (let a = 0; a < 6; a++) {
+    newString += alphabet[Math.floor(Math.random() * Math.floor(alphabet.length - 1)) + 1];
+        
+  }
+  return newString;
+}
+
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
+  //"b2xVn2": "http://www.lighthouselabs.ca",
+  //"9sm5xK": "http://www.google.com",
 };
+
+function userMatching(users, email) {
+  for (let u in users) {
+    if (email === users[u].email) {
+      return u;
+    }
+  }
+  return false;
+}
 
 const users = {
   userRandomID: {
@@ -94,7 +113,7 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     user : req.session.user_id,
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL] 
+    longURL: urlDatabase[req.params.shortURL].longURL, 
   };
    
   res.render("urls_show", templateVars);
@@ -103,7 +122,7 @@ app.get("/urls/:shortURL", (req, res) => {
 // POST - urls/:shortURL  - Edit the LongURL
 app.post("/urls/:shortURL", (req, res) => {
   const updatedURL = req.params.shortURL;
-  urlDatabase[updatedURL] = req.body.longURL;
+  urlDatabase[updatedURL].longURL = req.body.longURL;
   res.redirect("/urls");
 });
 
@@ -129,17 +148,21 @@ app.get("/login", (req, res) => {
   res.render("login", templateVars);
 });
 
-// login cookie
+// POST - login cookie
 app.post(("/login"), (req, res) => {
-  res.cookie('user_id', req.body.user_id);
+  let userID = userMatching(users, req.body.email);
+
+  console.log(userID.id);
+  
+  req.session.user_id = userID;
   res.redirect("/urls");
 });
 
 // logOut cookie
 app.post("/logout", (req, res) => {
-    res.clearCookie("user_id");
-    res.redirect("/urls");
-  });
+  req.session = null;
+  res.redirect("/login");
+});
 
 
 // GET - Register   
@@ -165,7 +188,7 @@ app.post("/register", (req, res)=>{
 
   let userID = generateRandomString();
    
-  users[rID] = {
+  users[userID] = {
     id: userID, 
     email: req.body.email, 
     password: req.body.password,

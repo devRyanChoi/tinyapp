@@ -24,8 +24,8 @@
       <a href="/register">Register</a>
       <%}else{%>
       
-        <form method="POST" action="/logout" for="user_id" class="d-flex nav-item" role="search">
-          <span class="nav-link">Welcome, <%= user_email %>!</span>
+        <form method="POST" action="/logout" class="d-flex nav-item" role="search">
+          <span class="nav-link">Welcome, <%= user.email %>!</span>
           <button class="btn btn-light" type="submit">Logout</button>
         </form>
         </div>
