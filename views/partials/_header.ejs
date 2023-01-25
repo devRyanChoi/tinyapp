@@ -17,22 +17,22 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
-    </div>
-    <% if(!user){ %>
-      <div class="navbar-nav">
-        <a href="/login" class="nav-item nav-link">Login</a>
-        <a href="/register" class="nav-item nav-link" >Register</a>
-    <% } %>
-    <% if(user) { %>
-      <div class="'navbar-nav">
-        <form method="POST" action="/logout" for="user_id" class="d-flex nav-item" role="search">
-          <span class="nav-link">Welcome, <%= user_email %>!</span>
-          <button class="btn btn-light" type="submit">Logout</button>
-        </form>
-        </div>
-    <% } %>
-    <div>
+      </div>
+      <% if(user){ %>
+        <div class="'navbar-nav">
+          <form method="POST" action="/logout" for="user_id" class="d-flex nav-item" role="search">
+            <span class="nav-link">Welcome, <%= user_email %>!</span>
+            <button class="btn btn-light" type="submit">Logout</button>
+          </form>
+          </div>
+       <% } else{ %>  
+        
+        <div class="navbar-nav">
+          <a href="/login" class="nav-item nav-link">Login</a>
+          <a href="/register" class="nav-item nav-link" >Register</a>
+         </div>
+        <% } %>
 
 
   </nav>
-</header>
+</header

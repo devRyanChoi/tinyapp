@@ -1,4 +1,3 @@
-
 const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
@@ -27,6 +26,16 @@ const users = {
   },
 };
 
+
+//generating random string to id
+function generateRandomString() {
+  let result = '';
+  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < 6; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
@@ -61,12 +70,15 @@ res.render("urls_new", templateVars);
 });
 
 app.post("/urls/new", (req, res) => {
-  let newURLId = generateRandomString();
-  urlDatabase[newURLId] = {
-    longURL: req.body.longURL,
-    user_id: req.cookies.user_id 
+  let newUrlId = generateRandomString();
+
+  if (!urlDatabase[newUrlId]) {
+    urlDatabase[newUrlId] = {
+      longURL: req.body.longURL,
+      userID: req.session.user_id 
+    }
   }
-res.redirect("/urls", newURLId);
+  res.redirect("/urls/");
 });
 
 
@@ -81,7 +93,7 @@ app.post("/urls", (req, res) => {
     
   urlDatabase[g] = {};
   urlDatabase[g].longURL = req.body.longURL;
-  urlDatabase[a].userID = req.cookies.user_id;
+  urlDatabase[g].userID = req.cookies.user_id;
   res.redirect(`/urls/${g}`);      
    
 });
