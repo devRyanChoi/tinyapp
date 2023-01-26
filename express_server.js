@@ -1,3 +1,4 @@
+
 const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
@@ -45,6 +46,8 @@ const users = {
   },
 };
 
+
+
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
@@ -88,10 +91,10 @@ app.post("/urls", (req, res) => {
 
 // GET - url/new
 app.get("/urls/new", (req, res) => {
-  if (!req.session.user_id) {
-    console.log("you are logged out, please login");
-    res.redirect("/login");
-  }
+  // if (!req.session.user_id) {
+  //   console.log("you are logged out, please login");
+  //   res.redirect("/login");
+  // }
     
   let templateVars = {
     user: req.session.user_id,
@@ -141,8 +144,7 @@ app.get("/login", (req, res) => {
   res.render("login", templateVars);
 });
 
-
-
+// POST - login cookie
 app.post(("/login"), (req, res) => {
   let userID = userMatching(users, req.body.email);
   function userMatching(users, email) {
@@ -180,7 +182,7 @@ app.post("/register", (req, res)=>{
   let getEmail = req.body.email;
   let getPassword = req.body.password;
   if (getEmail === '' || getPassword === '') {
-    console.log("registration failed");
+    console.log("error");
     return res.status(400).send("Error");
   }
 
@@ -201,5 +203,3 @@ app.post("/register", (req, res)=>{
   req.session.user_id = users[userID].id;
   res.redirect("/urls");
 });
-
-
