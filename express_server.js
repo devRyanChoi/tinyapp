@@ -16,23 +16,16 @@ app.use(
   })
 ); 
 
-function generateRandomString() {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let newString = '';
-  for (let a = 0; a < 6; a++) {
-    newString += alphabet[Math.floor(Math.random() * Math.floor(alphabet.length - 1)) + 1];
-        
-  }
-  return newString;
-}
-
 const urlDatabase = {
-  //"b2xVn2": "http://www.lighthouselabs.ca",
-  //"9sm5xK": "http://www.google.com",
+  b6UTxQ: {
+    longURL: "https://www.tsn.ca",
+    userID: "aJ48lW",
+  },
+  i3BoGr: {
+    longURL: "https://www.google.ca",
+    userID: "aJ48lW",
+  },
 };
-
-
-
 const users = {
   userRandomID: {
     id: "userRandomID",
@@ -45,6 +38,27 @@ const users = {
     password: "dishwasher-funk",
   },
 };
+
+function generateRandomString() {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let newString = '';
+  for (let a = 0; a < 6; a++) {
+    newString += alphabet[Math.floor(Math.random() * Math.floor(alphabet.length - 1)) + 1];
+        
+  }
+  return newString;
+}
+
+const urlForUser = (id, urlDatabase) => {
+  let matchingURLS = {};
+  for (let shortURL in urlDatabase) {
+    if(urlDatabase[shortURL].userID === id) {
+      matchingURLS[shortURL] = urlDatabase[shortURL];
+    }
+  }
+  return matchingURLS;
+};
+
 
 
 
@@ -66,7 +80,7 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-// get - URLS page
+// get - /urls
 app.get("/urls", (req, res) => {
   console.log(req.session);
   const templateVars = { 
@@ -76,7 +90,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars)
 });
 
-// POST - URLS page
+// POST - /urls
 app.post("/urls", (req, res) => {
 
   let g = generateRandomString();
@@ -91,16 +105,18 @@ app.post("/urls", (req, res) => {
 
 // GET - url/new
 app.get("/urls/new", (req, res) => {
-  // if (!req.session.user_id) {
-  //   console.log("you are logged out, please login");
-  //   res.redirect("/login");
-  // }
+  if (!req.session.user_id) {
+    console.log("Invalid user came!");
+    res.redirect("/login");
+  } else {
+    let templateVars = {
+      user: req.session.user_id,
+      shortURL: req.params.shortURL,
+      longURL: urlDatabase[req.params.shortURL] };
+    res.render("urls_new", templateVars);
+  }
     
-  let templateVars = {
-    user: req.session.user_id,
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL] };
-  res.render("urls_new", templateVars);
+  
 });
 
 // GET - url/:shortURL
@@ -123,10 +139,20 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 // GET - u/:shortURL
+// app.get("/u/:shortURL", (req, res) => {
+//   const longURL = urlDatabase[req.params.shortURL];
+//   res.redirect(longURL);
+// });
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+  const shortURL = req.params.shortURL;
+  if(!urlDatabase[shortURL]) {
+    return res.redirect("/login");
+  } else {
+    const longURL = urlDatabase[req.params.shortURL];
+    res.redirect(longURL);
+  }
 });
+
 
 //POST - urls/:shortURL/delete -delete
 app.post(("/urls/:shortURL/delete"), (req, res) => {
