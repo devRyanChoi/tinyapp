@@ -50,13 +50,13 @@ function generateRandomString() {
 }
 
 const urlForUser = (id, urlDatabase) => {
-  let matchingURLS = {};
+  let userUrls = {};
   for (let shortURL in urlDatabase) {
     if(urlDatabase[shortURL].userID === id) {
       matchingURLS[shortURL] = urlDatabase[shortURL];
     }
   }
-  return matchingURLS;
+  return userUrls;
 };
 
 
@@ -82,12 +82,19 @@ app.get("/urls.json", (req, res) => {
 
 // get - /urls
 app.get("/urls", (req, res) => {
-  console.log(req.session);
-  const templateVars = { 
-    user: users[req.session.user_id],
-    urls: urlDatabase,
+  // const userCookieID = req.session.user_id;
+  // const urls = urlsForUser(userCookieID);
+  if (!req.session.user_id) {
+    console.log("Warning! Invalid user came!");
+    res.redirect("/login");
+  } else {
+    const templateVars = { 
+      user: users[req.session.user_id],
+      urls: urlDatabase,
+    }
+    res.render("urls_index", templateVars)
   }
-  res.render("urls_index", templateVars)
+  
 });
 
 // POST - /urls
@@ -106,7 +113,7 @@ app.post("/urls", (req, res) => {
 // GET - url/new
 app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
-    console.log("Invalid user came!");
+    console.log("Warning! Invalid user came!");
     res.redirect("/login");
   } else {
     let templateVars = {
@@ -135,6 +142,7 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls/:shortURL", (req, res) => {
   const updatedURL = req.params.shortURL;
   urlDatabase[updatedURL].longURL = req.body.longURL;
+
   res.redirect("/urls");
 });
 
@@ -156,6 +164,11 @@ app.get("/u/:shortURL", (req, res) => {
 
 //POST - urls/:shortURL/delete -delete
 app.post(("/urls/:shortURL/delete"), (req, res) => {
+  
+  if (urlDatabase[req.params.shortURL].userID !== req.session.user_id) {
+    console.log("Warning! Invalid user came!");
+    return res.status(403).send("Only user can access");
+  }
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls")
 });
@@ -199,7 +212,7 @@ app.post("/logout", (req, res) => {
 
 // GET - Register   
 app.get("/register", (req, res)=>{
-  console.log("GET");
+  console.log("A client came to register!");
   res.render("register", {user: null});
 });
 
