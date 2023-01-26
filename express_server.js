@@ -244,6 +244,8 @@ app.post("/register", (req, res)=>{
     }
   }
 
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  
   let userID = generateRandomString();
    
   users[userID] = {
