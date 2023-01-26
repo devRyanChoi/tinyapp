@@ -2,6 +2,8 @@
 const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
+const bcrypt = require("bcryptjs");
+const { getUserByEmail } = require('./helpers')
 const PORT = 8080; // default port 8080
 
 
@@ -146,7 +148,8 @@ app.post("/urls/:shortURL", (req, res) => {
   res.redirect("/urls");
 });
 
-// GET - u/:shortURL
+
+// GET - u/:shortURL - 업데이트 전
 // app.get("/u/:shortURL", (req, res) => {
 //   const longURL = urlDatabase[req.params.shortURL];
 //   res.redirect(longURL);
@@ -184,7 +187,7 @@ app.get("/login", (req, res) => {
 });
 
 // POST - login cookie
-app.post(("/login"), (req, res) => {
+app.post("/login", (req, res) => {
   let userID = userMatching(users, req.body.email);
   function userMatching(users, email) {
     for (let u in users) {
@@ -200,6 +203,16 @@ app.post(("/login"), (req, res) => {
   } else {
     req.session.user_id = userID;
     res.redirect("/urls");
+  }
+
+  const email = req.body.email;
+  const password = req.body.password;
+  if(bcrypt.compareSync(password, user.password)) {
+    console.log(user.id);
+    req.session.user_id = user.id;
+    res.redirect("/urls");
+  } else {
+    res.status(403).send('Incorrect password, please try again');
   }
 });
 
