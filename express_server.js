@@ -1,4 +1,3 @@
-
 const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
@@ -244,14 +243,14 @@ app.post("/register", (req, res)=>{
     }
   }
 
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  const hashedPassword = bcrypt.hashSync(getPassword, 10);
   
   let userID = generateRandomString();
    
   users[userID] = {
     id: userID, 
     email: req.body.email, 
-    password: req.body.password,
+    password: hashedPassword,
   };
     
   req.session.user_id = users[userID].id;
