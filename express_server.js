@@ -2,9 +2,12 @@ const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
 const bcrypt = require("bcryptjs");
-const { getUserByEmail } = require('./helpers')
 const PORT = 8080; // default port 8080
-
+const { 
+  getUserByEmail,
+  fetchUserInfo,
+  generateRandomString,
+} = require('./helpers')
 
 app.use(cookieParser());
 app.set("view engine", "ejs");
@@ -28,39 +31,17 @@ const urlDatabase = {
   },
 };
 const users = {
-  userRandomID: {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur",
-  },
-  user2RandomID: {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk",
-  },
+  // userRandomID: {
+  //   id: "userRandomID",
+  //   email: "user@example.com",
+  //   password: "purple-monkey-dinosaur",
+  // },
+  // user2RandomID: {
+  //   id: "user2RandomID",
+  //   email: "user2@example.com",
+  //   password: "dishwasher-funk",
+  // },
 };
-
-function generateRandomString() {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let newString = '';
-  for (let a = 0; a < 6; a++) {
-    newString += alphabet[Math.floor(Math.random() * Math.floor(alphabet.length - 1)) + 1];
-        
-  }
-  return newString;
-}
-
-const urlForUser = (id, urlDatabase) => {
-  let userUrls = {};
-  for (let shortURL in urlDatabase) {
-    if(urlDatabase[shortURL].userID === id) {
-      matchingURLS[shortURL] = urlDatabase[shortURL];
-    }
-  }
-  return userUrls;
-};
-
-
 
 
 app.get("/hello", (req, res) => {
@@ -83,8 +64,7 @@ app.get("/urls.json", (req, res) => {
 
 // get - /urls
 app.get("/urls", (req, res) => {
-  // const userCookieID = req.session.user_id;
-  // const urls = urlsForUser(userCookieID);
+  
   if (!req.session.user_id) {
     console.log("Warning! Invalid user came!");
     res.redirect("/login");
@@ -143,16 +123,10 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls/:shortURL", (req, res) => {
   const updatedURL = req.params.shortURL;
   urlDatabase[updatedURL].longURL = req.body.longURL;
-
   res.redirect("/urls");
 });
 
 
-// GET - u/:shortURL - 업데이트 전
-// app.get("/u/:shortURL", (req, res) => {
-//   const longURL = urlDatabase[req.params.shortURL];
-//   res.redirect(longURL);
-// });
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   if(!urlDatabase[shortURL]) {
@@ -166,11 +140,6 @@ app.get("/u/:shortURL", (req, res) => {
 
 //POST - urls/:shortURL/delete -delete
 app.post(("/urls/:shortURL/delete"), (req, res) => {
-  
-  if (urlDatabase[req.params.shortURL].userID !== req.session.user_id) {
-    console.log("Warning! Invalid user came!");
-    return res.status(403).send("Only user can access");
-  }
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls")
 });
@@ -187,32 +156,22 @@ app.get("/login", (req, res) => {
 
 // POST - login cookie
 app.post("/login", (req, res) => {
-  let userID = userMatching(users, req.body.email);
-  function userMatching(users, email) {
-    for (let u in users) {
-      if (email === users[u].email) {
-        return u;
-      }
-    }
-    return false;
-  }
-  console.log(userID.id);
-  if(!userID) {
-    res.status(403).send("Invalid email")
-  } else {
-    req.session.user_id = userID;
-    res.redirect("/urls");
-  }
+  const emailUsed = req.body['email'];
+  const pwdUsed = req.body['password'];
+  if (!emailUsed || !pwdUsed) {
+    res.status(403).send('Incorrect account, please try again');
+  }  
 
-  const email = req.body.email;
-  const password = req.body.password;
-  if(bcrypt.compareSync(password, user.password)) {
-    console.log(user.id);
-    req.session.user_id = user.id;
-    res.redirect("/urls");
+  if (fetchUserInfo(emailUsed, users)) {
+    const { password, id } = fetchUserInfo(emailUsed, users);
+
+    if (bcrypt.compareSync(pwdUsed, password)) {
+      req.session.user_id = id;
+      res.redirect("/urls");
+    } 
   } else {
-    res.status(403).send('Incorrect password, please try again');
-  }
+      res.status(403).send('Incorrect account, please try again');
+    }
 });
 
 // logOut cookie
@@ -230,29 +189,22 @@ app.get("/register", (req, res)=>{
 
 // POST - Register   
 app.post("/register", (req, res)=>{
-  let getEmail = req.body.email;
-  let getPassword = req.body.password;
-  if (getEmail === '' || getPassword === '') {
+  const { email, password } = req.body;
+  if (!email || !password) {
     console.log("error");
     return res.status(400).send("Error");
   }
 
-  for (let keys in users) {
-    if (users[keys].email === getEmail) {
-      return res.status(400).send("email already exitsts");
-    }
-  }
+  if (getUserByEmail(email)) {return res.status(400).send("Email already exists")}
 
-  const hashedPassword = bcrypt.hashSync(getPassword, 10);
-  
-  let userID = generateRandomString();
-   
-  users[userID] = {
-    id: userID, 
-    email: req.body.email, 
-    password: hashedPassword,
-  };
-    
-  req.session.user_id = users[userID].id;
+    const ID = generateRandomString();
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    users[ID] = {
+      id: ID,
+      email: req.body.email,
+      password: hashedPassword
+    }
+
+  req.session.user_id = ID;
   res.redirect("/urls");
 });
