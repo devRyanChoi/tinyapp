@@ -3,6 +3,8 @@ const app = express();
 const bcrypt = require("bcryptjs");
 const PORT = 8080; // default port 8080
 const { 
+  getUserByID,
+  urlsForUser,
   getUserByEmail,
   fetchUserInfo,
   generateRandomString,
@@ -40,29 +42,6 @@ const users = {
   //   password: "dishwasher-funk",
   // },
 };
-
-const getUserByID = (userID, users) => {
-  for (let user in users) {
-    if (users[user].id === userID) {
-      return users[user];
-    }
-  }
-  return false;
-};
-
-const urlsForUser = function(userId) {
-  const urls = {};
-  const keys = Object.keys(urlDatabase);
-  for (const id of keys) {
-    const url = urlDatabase[id];
-    if (url.userID === userId) {
-      urls[id] = url;
-    }
-  }
-  return urls;
-};
-
-
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
