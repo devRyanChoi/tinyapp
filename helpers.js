@@ -7,17 +7,7 @@ const getUserByID = (userID, users) => {
   return false;
 };
 
-const urlsForUser = function(userId) {
-  const urls = {};
-  const keys = Object.keys(urlDatabase);
-  for (const id of keys) {
-    const url = urlDatabase[id];
-    if (url.userID === userId) {
-      urls[id] = url;
-    }
-  }
-  return urls;
-};
+
 
 const getUserByEmail = (email, users) => {
   for ( user in users) {
@@ -48,5 +38,5 @@ function generateRandomString() {
   return newString;
 }
 
-module.exports = { getUserByID, urlsForUser, getUserByEmail, fetchUserInfo, generateRandomString}
+module.exports = { getUserByID, getUserByEmail, fetchUserInfo, generateRandomString}
 
