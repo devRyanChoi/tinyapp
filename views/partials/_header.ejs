@@ -19,13 +19,13 @@
       </div>
     </div>
     <div class="navbar-nav">
-      <%if(!user){%>
+      <%if(!user_id){%>
       <a href="/login" class="btn btn-outline-light">Login</a>
       <a href="/register" class="btn btn-outline-light">Register</a>
       <%}else{%>
       
         <form method="POST" action="/logout" class="d-flex nav-item" role="search">
-          <span class="nav-link">Welcome, <%= user.email %>!</span>
+          <span class="nav-link">Welcome, <%= user_email %>!</span>
           <button class="btn btn-outline-light" type="submit">Logout</button>
           
         </form>

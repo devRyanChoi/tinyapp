@@ -32,10 +32,10 @@
           </tr>
         </thead>
         <tbody>
-          <% for (let id in urls) { %>
+          <% for (let id in url) { %>
             <tr>
               <td><%= id %></td>
-              <td><%= urls[id].longURL %></td>
+              <td><%= url[id].longURL %></td>
               <td>
                 <form method="GET" action="/urls/<%= id %>">  <button type="submit" class="btn btn-primary">Edit</button></form>
               </td>
@@ -44,6 +44,7 @@
               </td>
             </tr>
           <% } %>
+        </tbody>
       </table>
     </main>
     <!-- Bootstrap JS -->
